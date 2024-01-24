@@ -31,9 +31,13 @@ const eventoController = {
   },
 
   addEvento: async (req, res) => {
-    const sql = `INSERT INTO Evento (name_device, date_message, idMessage, dsc_Message, latitud, longitud, velocidad, ignicion, odometro_kms, dir) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const sql = `
+      INSERT INTO Evento (Unidad_idGps, name_device, date_message, idMessage, dsc_Message, latitud, longitud, velocidad, ignicion, odometro_kms, dir)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
     try {
       const {
+        Unidad_idGps, // Assuming this is the ID of the associated unit
         name_device,
         date_message,
         idMessage,
@@ -45,7 +49,9 @@ const eventoController = {
         odometro_kms,
         dir,
       } = req.body;
+
       const result = await connection.query(sql, [
+        Unidad_idGps,
         name_device,
         date_message,
         idMessage,
@@ -57,6 +63,7 @@ const eventoController = {
         odometro_kms,
         dir,
       ]);
+
       res.json(result);
     } catch (error) {
       console.error(error);

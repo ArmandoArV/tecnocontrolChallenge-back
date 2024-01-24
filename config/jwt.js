@@ -1,3 +1,3 @@
 module.exports = {
-  key: "tecnoc0ntr0l",
+  key: "t3cn0c0ntr0l",
 };
