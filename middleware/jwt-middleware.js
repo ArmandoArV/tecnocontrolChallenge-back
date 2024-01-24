@@ -6,7 +6,6 @@ const middleware = express.Router();
 
 middleware.use((req, res, next) => {
   const token = req.headers["x-access-token"];
-  console.log(token);
   if (token) {
     const decode = jwt.verify(token, config.key, (err, decoded) => {
       if (err) {

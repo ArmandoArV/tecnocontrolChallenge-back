@@ -7,7 +7,7 @@ const unidadController = {
     const sql = `SELECT * FROM Unidad`;
     try {
       const result = await connection.query(sql);
-      res.json(result);
+      res.json(result[0]);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -15,20 +15,21 @@ const unidadController = {
   },
 
   getUnidad: async (req, res) => {
-    const id = req.query;
-    const sql = `SELECT * FROM Unidad WHERE idUnidad = ?`;
+    const idGps = req.params.idGps; // Use req.params to get the parameter from the route
+    const sql = `SELECT * FROM Unidad WHERE idGps = ?`;
     try {
-      const result = await connection.query(sql, [id]);
+      const result = await connection.query(sql, [idGps]);
       if (result.length === 0) {
         res.status(404).json({ message: "Unit not found" });
       } else {
-        res.json(result);
+        res.json(result[0]);
       }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   },
+
   addUnidad: async (req, res) => {
     const sql = `
       INSERT INTO Unidad (marca, modelo, placas, serie, ano, color, linea, Usuario_idUsuario) 

@@ -7,7 +7,7 @@ const eventoController = {
     const sql = `SELECT * FROM Evento`;
     try {
       const result = await connection.query(sql);
-      res.json(result);
+      res.json(result[0]);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -15,14 +15,14 @@ const eventoController = {
   },
 
   getEvento: async (req, res) => {
-    const id = req.query;
+    const idEvento = req.params.idEvento; 
     const sql = `SELECT * FROM Evento WHERE idEvento = ?`;
     try {
-      const result = await connection.query(sql, [id]);
+      const result = await connection.query(sql, [idEvento]);
       if (result.length === 0) {
         res.status(404).json({ message: "Event not found" });
       } else {
-        res.json(result);
+        res.json(result[0]);
       }
     } catch (error) {
       console.error(error);
