@@ -15,7 +15,7 @@ const eventoController = {
   },
 
   getEvento: async (req, res) => {
-    const idEvento = req.params.idEvento; 
+    const idEvento = req.params.idEvento;
     const sql = `SELECT * FROM Evento WHERE idEvento = ?`;
     try {
       const result = await connection.query(sql, [idEvento]);
@@ -74,6 +74,37 @@ const eventoController = {
       } else {
         res.status(500).json({ message: "Internal server error" });
       }
+    }
+  },
+
+  getEventosByDateAndIdGps: async (req, res) => {
+    const { dtini, dtfin, idGps } = req.params;
+
+    if (!dtini || !dtfin || !idGps) {
+      return res
+        .status(400)
+        .json({ message: "dtini, dtfin, and idGps are required." });
+    }
+
+    const sql = `
+      SELECT * 
+      FROM Evento 
+      WHERE date_message BETWEEN ? AND ? AND Unidad_idGps = ?
+    `;
+
+    try {
+      const result = await connection.query(sql, [dtini, dtfin, idGps]);
+
+      if (result[0].length === 0) {
+        return res.status(404).json({
+          message: `No events found for idGps ${idGps} between ${dtini} and ${dtfin}.`,
+        });
+      }
+
+      res.json(result[0]);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
     }
   },
 };
